@@ -71,6 +71,7 @@ Node * traversal  (Node *current, SpineStack *traversed){
             stack_entry.next=traversed;
 
             Node * retnode= traversal(next, &stack_entry);
+            //add safegaurd or whatever the AI said
             current->func.kind=KIND_PTR;
             current->func.value.ptr= retnode;
             return current;
@@ -86,7 +87,21 @@ Node * traversal  (Node *current, SpineStack *traversed){
 
         }
     case KIND_S:
-    case KIND_K:
+    case KIND_K:{
+        if(traversed!=NULL){
+            Node *parent = traversed->node;
+            Term x= current->arguement;
+            if(x.kind== KIND_PTR){
+                Node * x_node=x.value.ptr;
+                parent->func=x_node->func;
+                parent->arguement=x_node->arguement;
+            } else [
+                parent->func=make_prim(KIND_I);
+                parent->arguement=x;
+            ]
+
+        }
+    }
         
     case KIND_PLUS:
     case KIND_MINUS:
