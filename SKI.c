@@ -78,7 +78,7 @@ Node * traversal  (Node *current, SpineStack *traversed){
         }
         case  KIND_I:{
             if(current->arguement.kind==KIND_PTR){
-                Node * next_node = current->arg.value.ptr;
+                Node * next_node = current->arguement.value.ptr;
                 current->func=next_node->func;
                 current->arguement=next_node->arguement;
                 return traversal(current, traversed);
@@ -86,7 +86,22 @@ Node * traversal  (Node *current, SpineStack *traversed){
         return current;
 
         }
-    case KIND_S:
+    case KIND_S:{
+        if (traversed!=NULL){
+            Node *parent=traversed->node;
+            Node *grandparent=traversed->next->node;
+
+            Term f= current->arguement;
+            Term g= parent->arguement;
+            Term x= grandparent->arguement;
+
+            Node *left_child = make_node(f, x);
+            Node *right_child = make_node(g, x);
+
+            grandparent->func = make_ptr(left_child);
+            grandparent->arguement = make_ptr(right_child);
+        }
+    }
     case KIND_K:{
         if(traversed!=NULL){
             Node *parent = traversed->node;
@@ -95,10 +110,10 @@ Node * traversal  (Node *current, SpineStack *traversed){
                 Node * x_node=x.value.ptr;
                 parent->func=x_node->func;
                 parent->arguement=x_node->arguement;
-            } else [
+            } else {
                 parent->func=make_prim(KIND_I);
                 parent->arguement=x;
-            ]
+            }
 
         }
     }
