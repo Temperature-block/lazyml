@@ -1,0 +1,15 @@
+(letrec (lt
+  (lambda (a) (lambda (b)
+    (if (= b 0)
+        (lambda (t) (lambda (f) f))
+        (if (= a 0)
+            (lambda (t) (lambda (f) t))
+            ((lt (- a 1)) (- b 1)))))))
+
+  (letrec (fib
+    (lambda (n)
+      (if ((lt n) 2)
+          n
+          (+ (fib (- n 1)) (fib (- n 2))))))
+
+    (fib 3)))
